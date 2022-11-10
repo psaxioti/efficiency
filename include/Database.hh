@@ -12,9 +12,12 @@
 
    #include <QString>
    #include <QFileDialog>
-//   #include <QDebug>
+   #include <QApplication>
+   #include <QDebug>
 //   #include <boost/function.hpp>
 //   #include <boost/bind.hpp>
+   #define XSTR(x) STR(x)
+   #define STR(x) #x
 
    struct data {
       size_t n;

@@ -100,9 +100,17 @@ std::vector < source > create_sources() {
    std::vector < source > test;
    std::vector < double > energies, energies_err, Intensity, Intensity_err;
    
-   std::string line;
+   std::string line, datapath, filename;
    std::ifstream sources;
-   sources.open("/usr/local/share/Efficiency/Sources_DB.lib");
+   #if defined(_WIN32) || defined(CUSTOM) || defined(__APPLE__)
+      datapath=QApplication::applicationDirPath().toStdString().c_str();
+      datapath.append("/Data/");
+   #elif defined(__linux__)
+      datapath="/usr/local/share/Efficiency/";
+   #endif
+   filename=datapath+"Sources_DB.lib";
+
+   sources.open(filename.c_str());
    if( !sources.is_open() ) {
       QString fileName = QFileDialog::getOpenFileName(0,"Open file with sources");
       sources.open(fileName.toUtf8().constData());
@@ -143,12 +151,19 @@ std::vector < source > create_sources() {
 
 std::vector < fit_function > create_functions() {
    std::vector < fit_function > test;
-   std::string name,picture;
+   std::string name,picture,datapath;
    int no_parameters;
+   #if defined(_WIN32) || defined(CUSTOM) || defined(__APPLE__)
+      datapath=QApplication::applicationDirPath().toStdString().c_str();
+      datapath.append("/Data/");
+   #elif defined(__linux__)
+      datapath="/usr/local/share/Efficiency/";
+   #endif
+   datapath.append("Icons/");
 
    {
       name = "Debertin";
-      picture = "/usr/local/share/Efficiency/Pic1.png";
+      picture = datapath+name+".png";
       no_parameters = 5;
       double xinit[] = { 1. , 1. , 1. , 1. , 1. };
       int Debertin_f (const gsl_vector * x, void *params, gsl_vector * f);;
@@ -166,7 +181,7 @@ std::vector < fit_function > create_functions() {
    }
    {
       name = "IAEA";
-      picture = "/usr/local/share/Efficiency/Pic2.png";
+      picture = datapath+name+".png";
       no_parameters = 4;
       double xinit[] = { 1. , 1. , 1. , 1. };
       int IAEA_f (const gsl_vector * x, void *params, gsl_vector * f);
@@ -184,7 +199,7 @@ std::vector < fit_function > create_functions() {
    }
    {
       name = "Kalfas";
-      picture = "/usr/local/share/Efficiency/Pic3.png";
+      picture = datapath+name+".png";
       no_parameters = 4;
       double xinit[] = { 1. , 1. , 1. , 1. };
       int Kalfas_f (const gsl_vector * x, void *params, gsl_vector * f);

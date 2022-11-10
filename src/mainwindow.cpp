@@ -195,7 +195,7 @@ MainWindow::MainWindow() {
     QWidget *window = new QWidget();
     window->setLayout(layout);
     setCentralWidget(window);
-    setWindowTitle(tr("Efficiency Calculator v1.2"));
+    setWindowTitle(tr(XSTR(Efficiency Calculator v VERSION)));
 }
 
 void MainWindow::source_number() {

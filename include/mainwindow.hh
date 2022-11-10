@@ -49,36 +49,36 @@
    #include "Database.hh"
    #include "newwindow.hh"
 
-//   #include <QMainWindow>
-//   #include <QtGui>
-//   #include <QStatusBar>
-//   #if QT_VERSION >= 0x050000
-//      #include <QtWidgets>
-//   #endif
+   #include <QMainWindow>
+   #include <QtGui>
+   #include <QStatusBar>
+   #if QT_VERSION >= 0x050000
+      #include <QtWidgets>
+   #endif
 
 //   #include <gsl/gsl_blas.h>
 //   #include <gsl/gsl_multifit_nlin.h>
 
-//   QT_BEGIN_NAMESPACE
-//      class QAction;
-//      class QDialogButtonBox;
-//      class QGroupBox;
-//      class QLabel;
-//      class QLineEdit;
-//      class QMenu;
-//      class QMenuBar;
-//      class QPushButton;
-//      class QTextEdit;
-//      class QSpinBox;
-//      class QStatusBar;
-//      class QComboBox;
-//      class QMessageBox;
-//      class QIcon;
-//      class QSize;
-//      class QDialog;
-//      class QCheckBox;
-//      class QDoubleSpinBox;
-//   QT_END_NAMESPACE
+   QT_BEGIN_NAMESPACE
+      class QAction;
+      class QDialogButtonBox;
+      class QGroupBox;
+      class QLabel;
+      class QLineEdit;
+      class QMenu;
+      class QMenuBar;
+      class QPushButton;
+      class QTextEdit;
+      class QSpinBox;
+      class QStatusBar;
+      class QComboBox;
+      class QMessageBox;
+      class QIcon;
+      class QSize;
+      class QDialog;
+      class QCheckBox;
+      class QDoubleSpinBox;
+   QT_END_NAMESPACE
 
    class newwindow;
 
