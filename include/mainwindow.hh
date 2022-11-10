@@ -44,6 +44,7 @@
 //   #include <iomanip>
 //   #include <fstream>
 //   #include <iostream>
+   #include <algorithm>
 
    #include "Database.hh"
    #include "newwindow.hh"
@@ -86,26 +87,26 @@
       
       private:
          std::vector < source > Sources;
-         int Number_of_Sources;
+//         int Number_of_Sources;
          int Number_of_Sources_used;
          std::vector < int > Selected_Source;
 //int Selected_source;
 //to be included         std::vector < int > Selected_Source;
          int Selected_Function;
          std::vector < std::vector < double > > Experimental_Data;
-         int Number_of_Exp_Points;
+//         int Number_of_Exp_Points;
          bool Plot_Window_Open;
          bool Repeat_Fit;
 
       public:
          int Number_of_Fits;
-         int Number_of_Functions;
+//         int Number_of_Functions;
          std::vector < fit_function > FFunctions;
          MainWindow();
          int * Fit_Order;
          double conf_band(int, int , double);
-         int Number_of_Plot_Points;
-         int Number_of_Fit_Points;
+//         int Number_of_Plot_Points;
+//         int Number_of_Fit_Points;
          std::vector < std::vector < double > > Data_to_fit;
 
       private slots:

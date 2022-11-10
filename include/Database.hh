@@ -76,6 +76,6 @@
          fit_function(std::string, std::string, int, double data[], normal_function, derivative_function);
    };
    
-   std::vector < fit_function > create_functions(int &);
+   std::vector < fit_function > create_functions();
 
 #endif

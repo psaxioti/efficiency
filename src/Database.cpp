@@ -141,11 +141,8 @@ std::vector < source > create_sources() {
    return test;
 }
 
-std::vector < fit_function > create_functions(int &Number_of_Functions) {
+std::vector < fit_function > create_functions() {
    std::vector < fit_function > test;
-   
-   Number_of_Functions = 0;
-   
    std::string name,picture;
    int no_parameters;
 
@@ -167,7 +164,6 @@ std::vector < fit_function > create_functions(int &Number_of_Functions) {
       fit_function test1(name,picture,no_parameters,xinit,f,df,fdf,ff,ffdf1);
       test.push_back(test1);
    }
-   Number_of_Functions++;
    {
       name = "IAEA";
       picture = "/usr/local/share/Efficiency/Pic2.png";
@@ -186,7 +182,6 @@ std::vector < fit_function > create_functions(int &Number_of_Functions) {
       fit_function test1(name,picture,no_parameters,xinit,f,df,fdf,ff,ffdf1);
       test.push_back(test1);
    }
-   Number_of_Functions++;
    {
       name = "Kalfas";
       picture = "/usr/local/share/Efficiency/Pic3.png";
@@ -205,7 +200,6 @@ std::vector < fit_function > create_functions(int &Number_of_Functions) {
       fit_function test1(name,picture,no_parameters,xinit,f,df,fdf,ff,ffdf1);
       test.push_back(test1);
    }
-   Number_of_Functions++;
    return test;
 }
 

@@ -10,9 +10,8 @@ newwindow::newwindow(MainWindow *testing) {
    QCustomPlot* customPlot = new QCustomPlot();
    QColor Colours[] = { QColor("black"), QColor("red"), QColor("blue"), QColor("green"), QColor("yellow"), QColor("darkRed") } ;
    int Number_of_Plots = 0;
-
-   QVector<double> x(testing->Number_of_Fit_Points), y(testing->Number_of_Fit_Points), yerr(testing->Number_of_Fit_Points);
-   for ( int i=0 ; i<testing->Number_of_Fit_Points ; i++ ) { x[i] = testing->Data_to_fit[i][0] ; y[i] = testing->Data_to_fit[i][1] ; yerr[i] = testing->Data_to_fit[i][2] ; }
+   QVector<double> x(testing->Data_to_fit.size()), y(testing->Data_to_fit.size()), yerr(testing->Data_to_fit.size());
+   for ( int i=0 ; i<testing->Data_to_fit.size() ; i++ ) { x[i] = testing->Data_to_fit[i][0] ; y[i] = testing->Data_to_fit[i][1] ; yerr[i] = testing->Data_to_fit[i][2] ; }
 
 //Plot for the experimental Data graph(0)
    customPlot->addGraph();
@@ -28,8 +27,8 @@ newwindow::newwindow(MainWindow *testing) {
    customPlot->xAxis->setLabel("Energy"+QString::fromUtf8("γ")+"(keV)");
    customPlot->yAxis->setLabel("Efficiency");
 // set axes ranges, so we see all data:
-   customPlot->xAxis->setRange(0.8*(testing->FFunctions[testing->Fit_Order[0]].X_for_Plot[0]), 1.2*(testing->FFunctions[testing->Fit_Order[0]].X_for_Plot[(testing->Number_of_Plot_Points)-1]));
-   customPlot->yAxis->setRange((*std::min_element(&(testing->FFunctions[testing->Fit_Order[0]].Y_for_Plot[0]),&(testing->FFunctions[testing->Fit_Order[0]].Y_for_Plot[(testing->Number_of_Plot_Points)-1])))*0.8, (*std::max_element(&(testing->FFunctions[testing->Fit_Order[0]].Y_for_Plot[0]),&(testing->FFunctions[testing->Fit_Order[0]].Y_for_Plot[(testing->Number_of_Plot_Points)-1])))*1.2);
+   customPlot->xAxis->setRange(0.8*(testing->FFunctions[testing->Fit_Order[0]].X_for_Plot[0]), 1.2*(testing->FFunctions[testing->Fit_Order[0]].X_for_Plot[(testing->FFunctions[testing->Fit_Order[0]].X_for_Plot.size())-1]));
+   customPlot->yAxis->setRange((*std::min_element(&(testing->FFunctions[testing->Fit_Order[0]].Y_for_Plot[0]),&(testing->FFunctions[testing->Fit_Order[0]].Y_for_Plot[(testing->FFunctions[testing->Fit_Order[0]].X_for_Plot.size())-1])))*0.8, (*std::max_element(&(testing->FFunctions[testing->Fit_Order[0]].Y_for_Plot[0]),&(testing->FFunctions[testing->Fit_Order[0]].Y_for_Plot[(testing->FFunctions[testing->Fit_Order[0]].X_for_Plot.size())-1])))*1.2);
 //End of plot for the experimental Data graph(0)
    customPlot->legend->setVisible(true);
    customPlot->legend->setFont(QFont("Helvetica", 9));
@@ -48,7 +47,7 @@ newwindow::newwindow(MainWindow *testing) {
       if(testing->FFunctions[testing->Fit_Order[ijk]].Plot_Confidence_Band==true) {
          for( int j=0 ; j<2 ; j++ ) {
             std::vector < double > cb(testing->FFunctions[testing->Fit_Order[ijk]].Y_for_Plot);
-            for( int k=0 ; k<testing->Number_of_Plot_Points ; k++ ) cb[k] = cb[k] + (pow(-1,j)*testing->FFunctions[testing->Fit_Order[ijk]].Confidence_Band[k]);
+            for( int k=0 ; k<testing->FFunctions[testing->Fit_Order[ijk]].Y_for_Plot.size() ; k++ ) cb[k] = cb[k] + (pow(-1,j)*testing->FFunctions[testing->Fit_Order[ijk]].Confidence_Band[k]);
             QPen pen;
             pen.setWidth(2);
             pen.setStyle(Qt::DotLine);

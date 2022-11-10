@@ -45,11 +45,11 @@ MainWindow::MainWindow() {
    int Line_Number=0;
    
    Sources = create_sources();
-   Number_of_Sources=Sources.size();
-   if( Number_of_Sources<=0 ) { error_code(12); this->close(); }
-   FFunctions = create_functions(Number_of_Functions);
+//   Number_of_Sources=Sources.size();
+   if( Sources.size()<=0 ) { error_code(12); this->close(); }
+   FFunctions = create_functions();
    
-   Fit_Order = new int [Number_of_Functions];
+   Fit_Order = new int [FFunctions.size()];
    Number_of_Fits = 0;
    Number_of_Sources_used=1;
    Selected_Function = 0;
@@ -63,7 +63,7 @@ MainWindow::MainWindow() {
    Number_of_Sources_label->setText("Number of Sources used");
    layout->addWidget(Number_of_Sources_label,Line_Number,0);
    Number_of_Sources_input = new QSpinBox;
-   Number_of_Sources_input->setMaximum(Number_of_Sources);
+   Number_of_Sources_input->setMaximum(Sources.size());
    Number_of_Sources_input->setMinimum(1);
    layout->addWidget(Number_of_Sources_input,Line_Number++,1);
    connect(Number_of_Sources_input, SIGNAL(valueChanged(int)), this, SLOT(source_number()));
@@ -72,7 +72,7 @@ MainWindow::MainWindow() {
    source_input_text.push_back("Activity (Bq)");
    source_input_text.push_back("Activity Error(Bq)");
    source_input_text.push_back("Measurement Time (sec)");
-   for(int j=0 ; j<Number_of_Sources ; j++){   
+   for(int j=0 ; j<Sources.size() ; j++){   
       for( unsigned int i=0 ; i<source_input_text.size() ; i++ ) {
          source_input_label.push_back(new QLabel());
          if(i==0)source_input_label[i+(j*source_input_text.size())]->setText(source_input_text[i]+QString::number(j+1));
@@ -82,7 +82,7 @@ MainWindow::MainWindow() {
       }
 
       source_input.push_back(new QComboBox());
-      for ( int i=0 ; i<Number_of_Sources ; i++ ) source_input[j]->addItem(QString::fromStdString(Sources[i].Source_Name)); 
+      for ( int i=0 ; i<Sources.size() ; i++ ) source_input[j]->addItem(QString::fromStdString(Sources[i].Source_Name)); 
       layout->addWidget(source_input[j],++Line_Number,0);
       connect(source_input[j], SIGNAL(activated(int)), this, SLOT(source_choice()));
       source_input[j]->setHidden(true);
@@ -125,7 +125,7 @@ MainWindow::MainWindow() {
    Function_Select_box->setMaximumHeight(45);
    Function_Select_box->setMinimumHeight(45);
    Function_Select_box->setIconSize(QSize(250,45));
-   for ( int i=0 ; i<Number_of_Functions ; i++ ) {
+   for ( int i=0 ; i<FFunctions.size() ; i++ ) {
       Function_Icon = new QIcon();
       Function_Icon->addFile(QString::fromStdString(FFunctions[i].Function_Picture));
       Function_Select_box->addItem("");
@@ -150,7 +150,7 @@ MainWindow::MainWindow() {
    Editor_window->setPlainText(tr(""));
    layout->addWidget(Editor_window, Line_Number, 0, 6,2);
 
-   for( int i=0 ; i<Number_of_Functions ; i++ ) {
+   for( int i=0 ; i<FFunctions.size() ; i++ ) {
       Plot_Fit_select.push_back(new QCheckBox());
       Plot_Fit_select[i]->setHidden(true);
       layout->addWidget(Plot_Fit_select[i],Line_Number,2);
@@ -174,7 +174,7 @@ MainWindow::MainWindow() {
    Calculate_button->setDisabled(true);
    connect(Calculate_button, SIGNAL(released()), this, SLOT(calc_eff()));
    layout->addWidget(Calculate_button,Line_Number++,2);
-   for( int i=0 ; i<Number_of_Functions ; i++ ) {
+   for( int i=0 ; i<FFunctions.size() ; i++ ) {
       Calculate_Efficiency_label.push_back(new QLabel());
       Calculate_Efficiency_label[i]->setHidden(true);
       layout->addWidget(Calculate_Efficiency_label[i],Line_Number,0);
@@ -195,7 +195,7 @@ MainWindow::MainWindow() {
     QWidget *window = new QWidget();
     window->setLayout(layout);
     setCentralWidget(window);
-    setWindowTitle(tr("Efficiency Calculator v1.1"));
+    setWindowTitle(tr("Efficiency Calculator v1.2"));
 }
 
 void MainWindow::source_number() {
@@ -210,7 +210,7 @@ void MainWindow::source_number() {
       source_input_activity_error[i]->setHidden(false);
       source_input_time[i]->setHidden(false);
    }
-   for (int i=Number_of_Sources_used ; i<Number_of_Sources ; i++){
+   for (int i=Number_of_Sources_used ; i<Sources.size() ; i++){
       for (unsigned int j=0 ; j<source_input_text.size() ; j++) source_input_label[j+(i*source_input_text.size())]->setHidden(true);
       source_input[i]->setHidden(true);
       source_input_activity[i]->setHidden(true);
@@ -223,7 +223,7 @@ void MainWindow::source_number() {
 
 void MainWindow::source_choice() {
    Selected_Source.clear();
-   for ( int i=0 ; i<Number_of_Sources_used ; i++ ) for (int j=0 ; j<Number_of_Sources ; j++) if (QString::fromStdString(Sources[j].Source_Name)==source_input[i]->currentText())Selected_Source.push_back(j);
+   for ( int i=0 ; i<Number_of_Sources_used ; i++ ) for (int j=0 ; j<Sources.size() ; j++) if (QString::fromStdString(Sources[j].Source_Name)==source_input[i]->currentText())Selected_Source.push_back(j);
    source_number();
    for ( int i=0 ; i<Number_of_Sources_used ; i++ ) for ( int j=i+1 ; j<Number_of_Sources_used ; j++ ) if (Selected_Source[i]==Selected_Source[j]) { error_code(2); return; }
    return;
@@ -233,14 +233,13 @@ void MainWindow::open() {
    QString fileName = QFileDialog::getOpenFileName(this);
    if ( !fileName.isEmpty() ) {
       loadFile(fileName);
-      Number_of_Fit_Points = 0;
       Number_of_Fits = 0;
       Data_to_fit.clear();
       Repeat_Fit_button->setDisabled(true);
       Calculate_Efficiencies_button->setDisabled(false);
       Plot_button->setDisabled(true);
       Calculate_button->setDisabled(true);
-      for( int i=0 ; i<Number_of_Functions ; i++ ) {
+      for( int i=0 ; i<FFunctions.size() ; i++ ) {
          FFunctions[i].X_for_Plot.clear();
          FFunctions[i].Y_for_Plot.clear();
          FFunctions[i].Confidence_Band.clear();
@@ -266,15 +265,16 @@ void MainWindow::open() {
 void MainWindow::loadFile(const QString &fileName) {
    std::ifstream file(fileName.toUtf8().constData());
    std::string line;
-   Number_of_Exp_Points = 0;
+   Experimental_Data.clear();
    while ( getline(file, line) ) {
       std::vector < double > data;
       double value;
       std::istringstream iss(line);
       while ( iss >> value ) data.push_back(value);
       Experimental_Data.push_back(data);
-      Number_of_Exp_Points++;
    }
+   std::sort(Experimental_Data.begin(),Experimental_Data.end());
+
    file.close();
    #ifndef QT_NO_CURSOR
       QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -286,13 +286,12 @@ void MainWindow::loadFile(const QString &fileName) {
 }
 
 void MainWindow::calc_exp_eff() {
-   Number_of_Fit_Points = 0;
    Number_of_Fits = 0;
    Data_to_fit.clear();
    Repeat_Fit_button->setDisabled(true);
    Plot_button->setDisabled(true);
    Calculate_button->setDisabled(true);
-   for( int i=0 ; i<Number_of_Functions ; i++ ) {
+   for( int i=0 ; i<FFunctions.size() ; i++ ) {
       FFunctions[i].X_for_Plot.clear();
       FFunctions[i].Y_for_Plot.clear();
       FFunctions[i].Confidence_Band.clear();
@@ -313,34 +312,53 @@ void MainWindow::calc_exp_eff() {
    }
    Editor_window->clear();
 
-   for (int k=0 ; k<Selected_Source.size() ; k++){
-      int Selected_source=Selected_Source[k]; 
-      double activity = source_input_activity[k]->value();
-      double activity_error = source_input_activity_error[k]->value();
-      double measurement_time = source_input_time[k]->value();
-
-      if( activity==0 ) { error_code(0) ; return ; }
-      if( measurement_time==0 ) { error_code(1) ; return ; }
-      if( Experimental_Data[0][0]==0 ) { error_code(10) ; return ; }
-
-      for( int i=0 ; i<Sources[Selected_source].Gammas.size() ; i++ ) {
-         for ( int j=0 ; j<Number_of_Exp_Points ; j++ ) {
-            std::vector < double > data;
-            double value;
-            if( abs(Experimental_Data[j][0]-Sources[Selected_source].Gammas[i])<2. ) {
-               value = Sources[Selected_source].Gammas[i];
-               data.push_back(value);
-               value = Experimental_Data[j][1]/(measurement_time*activity*(Sources[Selected_source].Intensities[i]/100.));
-               data.push_back(value);
-               value = value * sqrt( (pow(Experimental_Data[j][2]/Experimental_Data[j][1],2)) + (pow(Sources[Selected_source].Intensities_Errors[i]/Sources[Selected_source].Intensities[i],2)) + (pow(activity_error/activity,2)));
-               data.push_back(value);
-               Data_to_fit.push_back(data);
-               Number_of_Fit_Points++;
+   std::vector < double > activity, activity_error, measurement_time;
+   for( int i=0 ; i<Selected_Source.size() ; i++ ){
+      activity.push_back(source_input_activity[i]->value());
+      activity_error.push_back(source_input_activity_error[i]->value());
+      measurement_time.push_back(source_input_time[i]->value());
+      if( activity[i]==0 ) { error_code(0) ; return ; }
+      if( measurement_time[i]==0 ) { error_code(1) ; return ; }
+   }
+   if( Experimental_Data[0][0]==0 ) { error_code(10) ; return ; }
+   for (int i=0 ; i<Experimental_Data.size() ; i++){
+      std::vector < int > found_in_sources, number_of_gamma_in_source;
+      for (int k=0 ; k<Selected_Source.size() ; k++){
+         for (int j=0 ; j<Sources[Selected_Source[k]].Gammas.size() ; j++){
+            if( abs(Experimental_Data[i][0]-Sources[Selected_Source[k]].Gammas[j])<2. ){
+               found_in_sources.push_back(k);
+               number_of_gamma_in_source.push_back(j);
+            }
+            if(Experimental_Data[i][0]<(Sources[Selected_Source[k]].Gammas[j]+2.)) break;
+         }
+      }
+      if (found_in_sources.size()>1){
+         QStringList items;
+         bool ok;
+         QString tex="Data point of energy "+QString::number(Experimental_Data[i][0])+" keV could belong to more than one source.\nPlease select the source that it was measured for.";
+         for (int j=0 ; j<found_in_sources.size() ; j++)items<<QString::fromStdString(Sources[Selected_Source[found_in_sources[j]]].Source_Name);
+         QString ret=QInputDialog::getItem(this, tr("Source selection"), tex, items, 0, false, &ok);
+         if(ok){
+            for (int j=0 ; j<found_in_sources.size() ; j++) if(QString::fromStdString(Sources[Selected_Source[found_in_sources[j]]].Source_Name)==ret){
+               found_in_sources.clear();
+               found_in_sources.push_back(j);
+               int dummy=number_of_gamma_in_source[j];
+               number_of_gamma_in_source.clear();
+               number_of_gamma_in_source.push_back(dummy);
+               break;
             }
          }
       }
+      if(found_in_sources.size()==1){
+         std::vector < double > data;
+         data.push_back(Sources[Selected_Source[found_in_sources[0]]].Gammas[number_of_gamma_in_source[0]]);
+         data.push_back(Experimental_Data[i][1] / (measurement_time[found_in_sources[0]]*activity[found_in_sources[0]]*(Sources[Selected_Source[found_in_sources[0]]].Intensities[number_of_gamma_in_source[0]]/100.)));
+         data.push_back(data[1]*sqrt( (pow(Experimental_Data[i][2]/Experimental_Data[i][1],2)) + (pow(Sources[Selected_Source[found_in_sources[0]]].Intensities_Errors[number_of_gamma_in_source[0]]/Sources[Selected_Source[found_in_sources[0]]].Intensities[number_of_gamma_in_source[0]],2)) + (pow(activity_error[found_in_sources[0]]/activity[found_in_sources[0]],2))));
+         Data_to_fit.push_back(data);
+      }
    }
-   if(Number_of_Exp_Points>Number_of_Fit_Points) error_code(3);
+
+   if(Experimental_Data.size()>Data_to_fit.size()) error_code(3);
    Fit_button->setDisabled(false);
    Repeat_Fit_button->setDisabled(true);
    return;
@@ -354,17 +372,17 @@ void MainWindow::func_choice() {
 
 void MainWindow::fit_func() {
    if ( Data_to_fit.size()==0 ) { error_code(10) ; return ; }
-   if ( Number_of_Fit_Points<FFunctions[Selected_Function].Number_of_Parameters ) { error_code(11) ; return ; }
+   if ( Data_to_fit.size()<FFunctions[Selected_Function].Number_of_Parameters ) { error_code(11) ; return ; }
    const gsl_multifit_fdfsolver_type *T;
    gsl_multifit_fdfsolver *s;
    int status;
    unsigned int iter = 0;
-   const size_t n = Number_of_Fit_Points;
+   const size_t n = Data_to_fit.size();
    const size_t p = FFunctions[Selected_Function].Number_of_Parameters;
    
    gsl_matrix *covar = gsl_matrix_alloc(p,p);
    double t[n], y[n], sigma[n];
-   for ( int i=0 ; i<Number_of_Fit_Points ; i++ ) {
+   for ( int i=0 ; i<Data_to_fit.size() ; i++ ) {
       t[i] = Data_to_fit[i][0];
       y[i] = Data_to_fit[i][1];
       sigma[i] = Data_to_fit[i][2];
@@ -449,22 +467,23 @@ void MainWindow::fit_func() {
 
    result_line = "\n chisq/dof= "+ QString::number(pow(FFunctions[Selected_Function].Chi2, 2.0) / FFunctions[Selected_Function].Degrees_of_Freedom);
    Editor_window->append(result_line);
-   Number_of_Plot_Points = (t[Number_of_Fit_Points-1]*1.2-t[0]*0.8)/5.;
-   for( int i=0 ; i<Number_of_Plot_Points ; i++ ) {
-      FFunctions[Selected_Function].X_for_Plot.push_back((i*5.)+(t[0]*0.8));
-      FFunctions[Selected_Function].Y_for_Plot.push_back(FFunctions[Selected_Function].Fit_Function(FFunctions[Selected_Function].X_for_Plot[i],FFunctions[Selected_Function].Parameters_Values));
-      FFunctions[Selected_Function].Confidence_Band.push_back(conf_band(Selected_Function,p,FFunctions[Selected_Function].X_for_Plot[i]));
-   }
+   do {
+      if(FFunctions[Selected_Function].X_for_Plot.size()>0) FFunctions[Selected_Function].X_for_Plot.push_back(5.+FFunctions[Selected_Function].X_for_Plot[FFunctions[Selected_Function].X_for_Plot.size()-1]);
+      else FFunctions[Selected_Function].X_for_Plot.push_back(t[0]*0.8);
+      FFunctions[Selected_Function].Y_for_Plot.push_back(FFunctions[Selected_Function].Fit_Function(FFunctions[Selected_Function].X_for_Plot[FFunctions[Selected_Function].X_for_Plot.size()-1],FFunctions[Selected_Function].Parameters_Values));
+      FFunctions[Selected_Function].Confidence_Band.push_back(conf_band(Selected_Function,p,FFunctions[Selected_Function].X_for_Plot[FFunctions[Selected_Function].X_for_Plot.size()-1]));
+
+   } while( FFunctions[Selected_Function].X_for_Plot[FFunctions[Selected_Function].X_for_Plot.size()-1]<t[Data_to_fit.size()-1]*1.2 );
 
 //Ypologismos R^2
    double sum = 0;
-   for( int i=0 ; i<Number_of_Fit_Points ; i++ ) sum += Data_to_fit[i][1];
-   double yaver = sum/Number_of_Fit_Points;
+   for( int i=0 ; i<Data_to_fit.size() ; i++ ) sum += Data_to_fit[i][1];
+   double yaver = sum/Data_to_fit.size();
    sum = 0;
-   for( int i=0 ; i<Number_of_Fit_Points ; i++ ) sum += pow((Data_to_fit[i][1]-yaver),2);
+   for( int i=0 ; i<Data_to_fit.size() ; i++ ) sum += pow((Data_to_fit[i][1]-yaver),2);
 
    double sum1 = 0;
-   for( int i=0 ; i<Number_of_Fit_Points ; i++ ) sum1 += pow((Data_to_fit[i][1]-FFunctions[Selected_Function].Fit_Function(Data_to_fit[i][0],FFunctions[Selected_Function].Parameters_Values)),2);
+   for( int i=0 ; i<Data_to_fit.size() ; i++ ) sum1 += pow((Data_to_fit[i][1]-FFunctions[Selected_Function].Fit_Function(Data_to_fit[i][0],FFunctions[Selected_Function].Parameters_Values)),2);
 
    result_line = "\n RSq= "+ QString::number(1-sum1/sum);
    Editor_window->append(result_line);
@@ -586,8 +605,7 @@ void MainWindow::error_code (int code){
 }
 
 double MainWindow::conf_band(int function, int p, double egamma){
-   double t_test[18] = {12.706,4.303,3.182,2.776,2.571,2.447,2.365,2.306,2.262,2.228,
-                       2.201,2.179,2.160,2.145,2.131,2.120,2.110,2.101};
+   double t_test[99] = {12.706204736174698, 4.302652729749464, 3.182446305283708, 2.7764451051977934, 2.570581835636314, 2.4469118511449666, 2.3646242515927853, 2.306004135204168, 2.262157162798205, 2.2281388519862735, 2.2009851600916384, 2.178812829667226, 2.1603686564627917, 2.1447866879178012, 2.131449545559774, 2.1199052992212533, 2.1098155778333156, 2.100922040241039, 2.093024054408307, 2.0859634472658626, 2.0796138447276835, 2.073873067904019, 2.0686576104190477, 2.0638985616280254, 2.0595385527532963, 2.05552943864287, 2.051830516480281, 2.048407141795243, 2.0452296421327034, 2.042272456301236, 2.039513446396408, 2.0369333434600976, 2.0345152974493392, 2.032244509317719, 2.030107928250338, 2.0280940009804462, 2.0261924630291066, 2.024394163911966, 2.022690920036762, 2.0210753903062715, 2.0195409704413745, 2.018081702818439, 2.016692199227822, 2.0153675744437627, 2.0141033888808457, 2.0128955989194246, 2.011740513729764, 2.0106347576242314, 2.0095752371292335, 2.0085591121007527, 2.007583770315835, 2.0066468050616857, 2.005745995317864, 2.0048792881880577, 2.004044783289136, 2.0032407188478696, 2.002465459291016, 2.001717484145232, 2.000995378088259, 2.0002978220142578, 1.9996235849949402, 1.998971517033376, 1.9983405425207483, 1.997729654317692, 1.9971379083920013, 1.9965644189523084, 1.996008354025304, 1.9954689314298386, 1.994945415107228, 1.9944371117711894, 1.9939433678456229, 1.993463566661884, 1.9929971258898527, 1.9925434951809258, 1.992102154002232, 1.9916726096446793, 1.9912543953883763, 1.9908470688116922, 1.9904502102301198, 1.990063421254452, 1.989686323456895, 1.9893185571365664, 1.9889597801751728, 1.9886096669757192, 1.9882679074772156, 1.9879342062390228, 1.9876082815890748, 1.9872898648311672, 1.9869786995062702, 1.986674540703777, 1.986377154418625, 1.9860863169510985, 1.9858018143458114, 1.9855234418666061, 1.9852510035054973, 1.9849843115224508, 1.9847231860139618, 1.98446745450849, 1.9842169515863888};
 
    gsl_matrix *sigy = gsl_matrix_alloc (1, 1);
 
@@ -618,6 +636,5 @@ double MainWindow::conf_band(int function, int p, double egamma){
    gsl_matrix_free(cov);
    gsl_matrix_free(fro);
    gsl_matrix_free(sigy);
-
    return t_test[FFunctions[function].Degrees_of_Freedom]*sqrt(pow(FFunctions[function].Chi2,2)*sqrt(pow(llalla,2)));
 }
