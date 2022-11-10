@@ -447,8 +447,13 @@ void MainWindow::fit_func() {
          Calculate_button->setDisabled(false);
       }
    }
-
+#if GSL_MAJOR_VERSION >= 2
+   gsl_matrix * J = gsl_matrix_alloc(s->fdf->n, s->fdf->p);
+   gsl_multifit_fdfsolver_jac(s, J);
+   gsl_multifit_covar (J, 0.0, covar);
+#else
    gsl_multifit_covar (s->J, 0.0, covar);
+#endif
 
    for (size_t k = 0; k < p ; k++) {
       FFunctions[Selected_Function].Parameters_Values[k] = gsl_vector_get (s->x, k);

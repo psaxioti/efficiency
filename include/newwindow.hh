@@ -18,6 +18,7 @@
    #include <gsl/gsl_vector.h>
    #include <gsl/gsl_blas.h>
    #include <gsl/gsl_multifit_nlin.h>
+   #include <gsl/gsl_version.h>
 
    #include <algorithm>
    #include "mainwindow.hh"
