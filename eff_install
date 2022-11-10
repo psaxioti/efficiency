@@ -1,0 +1,18 @@
+#!/bin/bash
+
+program=qmake
+#program=qmake-qt5
+#program=i686-w64-mingw32-qmake-qt5
+#program=i686-w64-mingw32-qmake
+
+$program -project
+sed -i '/INCLUDEPATH/a QT += widgets printsupport' *.pro
+sed -i '/INCLUDEPATH/a LIBS += -lgsl -lgslcblas -lm' *.pro
+sed -i '/INCLUDEPATH/a QMAKE_CFLAGS += -ffloat-store' *.pro
+sed -i '/INCLUDEPATH/a QMAKE_CXXFLAGS += -ffloat-store' *.pro
+$program
+make
+make clean
+
+exit 0
+

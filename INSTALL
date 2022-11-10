@@ -1,0 +1,9 @@
+For Linux you can try to run the script eff_install
+
+If that doesn't work run the following commands
+# qmake -project
+# qmake
+Add at the Makefile that is created the flag "-ffloat-store" at the CFLAGS and CXXFLAGS variables and the flags "-lgsl -lgslcblas -lm" at the LIBS variable.
+Then run
+#make
+Finally run the executable that is created.
