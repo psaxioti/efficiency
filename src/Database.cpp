@@ -3,18 +3,14 @@
 source :: source() {
 }
 
-source :: source(std::string name, double Lt, int NG, double data[]) {
+source :: source(std::string name, double Lt, double Lt_err, std::vector < double > en, std::vector < double > en_err, std::vector < double > ig, std::vector < double > ig_err) {
    Source_Name = name;
    Lifetime=Lt;
-   Number_of_Gammas = NG;
-   Gammas = new double [NG];
-   Intensities = new double [NG];
-   Intensities_Errors = new double [NG];
-   for( int i=0 ; i<NG ; i++ ) {
-      Gammas[i] = data[i];
-      Intensities[i] = data[NG+i];
-      Intensities_Errors[i] = data[(2*NG)+i];
-   }
+   Lifetime_Error=Lt_err;
+   Gammas = en;
+   Gammas_Errors = en_err;
+   Intensities = ig;
+   Intensities_Errors = ig_err;
 }
 
 fit_function::fit_function() {
@@ -98,39 +94,49 @@ int fit_function::fdf1(const gsl_vector * x, void *params, gsl_vector * f, gsl_m
    return GSL_SUCCESS;
 }
 
-std::vector < source > create_sources(int &Number_of_Sources) {
+std::vector < source > create_sources() {
+   double Lifetime=0., Lifetime_error=0.;
    std::string Source_Name;
-   double Lifetime;
-   int Number_of_Gammas;
-   double data[3000];
    std::vector < source > test;
+   std::vector < double > energies, energies_err, Intensity, Intensity_err;
    
-   double value;
    std::string line;
    std::ifstream sources;
-
    sources.open("/usr/local/share/Efficiency/Sources_DB.lib");
    if( !sources.is_open() ) {
-      Number_of_Sources = -1;
       QString fileName = QFileDialog::getOpenFileName(0,"Open file with sources");
       sources.open(fileName.toUtf8().constData());
       if( !sources.is_open() ) return test;
    }
-
-   sources>>Number_of_Sources;
-   for ( int i=0 ; i < Number_of_Sources ; i++ ) {
-      std::vector < double > info;
-      sources>>Source_Name>>Lifetime>>Number_of_Gammas;
+   
+   while(!sources.eof()){
+      char c=sources.peek();
+      double en, en_err, ig, ig_err;
+      if(c=='#' || c=='\n' || c==EOF){
+         sources.ignore(512, '\n');
+         if(energies.size()>0.){
+            source test1(Source_Name,Lifetime,Lifetime_error,energies,energies_err,Intensity,Intensity_err);
+            test.push_back(test1);
+            Lifetime=0.;
+            energies.clear();
+            energies_err.clear();
+            Intensity.clear();
+            Intensity_err.clear();
+         }
+         continue;
+      }
       getline(sources, line);
-      for( int j=0 ; j<3 ; j++ ){
-         getline(sources, line);
-         std::istringstream iss(line);
-         while (iss >> value) info.push_back(value);
-      } 
-      for ( std::vector < double > :: size_type j = 0, length = info.size() ; j < length ; ++j ) data[j] = info[j];
-      source test1(Source_Name,Lifetime,Number_of_Gammas,data);
-      test.push_back(test1);
+      std::istringstream iss(line);
+      if(Lifetime==0.) iss>>Source_Name>>Lifetime>>Lifetime_error;
+      else {
+         iss>>en>>en_err>>ig>>ig_err;
+         energies.push_back(en);
+         energies_err.push_back(en_err);
+         Intensity.push_back(100*ig);
+         Intensity_err.push_back(100*ig_err);
+      }
    }
+
    sources.close();
    return test;
 }

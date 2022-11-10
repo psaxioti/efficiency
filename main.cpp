@@ -38,7 +38,7 @@
 **
 ****************************************************************************/
 
-#include <QApplication>
+//#include <QApplication>
 
 #include "mainwindow.hh"
 

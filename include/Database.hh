@@ -5,14 +5,14 @@
    #include <vector>
    #include <sstream>
    #include <fstream>
-   #include <iostream>
+//   #include <iostream>
 
    #include <gsl/gsl_blas.h>
    #include <gsl/gsl_multifit_nlin.h>
 
    #include <QString>
    #include <QFileDialog>
-   #include <QDebug>
+//   #include <QDebug>
 //   #include <boost/function.hpp>
 //   #include <boost/bind.hpp>
 
@@ -33,16 +33,17 @@
       public:
          std::string Source_Name;
          double Lifetime;
-         int Number_of_Gammas;
-         double * Gammas;
-         double * Intensities;
-         double * Intensities_Errors;
+         double Lifetime_Error;
+         std::vector < double > Gammas;
+         std::vector < double > Gammas_Errors;
+         std::vector < double > Intensities;
+         std::vector < double > Intensities_Errors;
       public:
          source();
-         source(std::string, double, int, double data[]);
+         source(std::string, double, double, std::vector < double >, std::vector < double >, std::vector < double >, std::vector < double >);
    };
 
-   std::vector < source > create_sources(int &);
+   std::vector < source > create_sources();
    
    class fit_function {
       public:
