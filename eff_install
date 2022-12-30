@@ -1,7 +1,7 @@
 #!/bin/bash
 
-program=qmake
-#program=qmake-qt5
+#program=qmake
+program=qmake-qt5
 #program=mingw64-qmake-qt5
 
 datapath="/usr/local/share/Efficiency"
@@ -11,7 +11,7 @@ if [[ "$program" == "mingw64-qmake-qt5" ]]
    datapath="."
 fi
 
-$program -project "QT += widgets printsupport" "LIBS += -lgsl -lgslcblas -lm" "QMAKE_CFLAGS += -ffloat-store" "QMAKE_CXXFLAGS += -ffloat-store" "DEFINES += VERSION=1.3 CUSTOM" 
+$program -project "QT += widgets printsupport" "LIBS += -lgsl -lgslcblas -lm" "QMAKE_CFLAGS += -ffloat-store" "QMAKE_CXXFLAGS += -ffloat-store" "DEFINES += VERSION=1.4 CUSTOM" "INCLUDEPATH += include"
 $program
 make
 make clean

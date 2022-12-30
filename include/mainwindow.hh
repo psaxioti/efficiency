@@ -39,135 +39,138 @@
 ****************************************************************************/
 
 #ifndef MAINWINDOW_H
-   #define MAINWINDOW_H 1
-   
+#define MAINWINDOW_H 1
+
 //   #include <iomanip>
 //   #include <fstream>
 //   #include <iostream>
-   #include <algorithm>
+#include <algorithm>
 
-   #include "Database.hh"
-   #include "newwindow.hh"
+#include "Database.hh"
+#include "newwindow.hh"
 
-   #include <QMainWindow>
-   #include <QtGui>
-   #include <QStatusBar>
-   #if QT_VERSION >= 0x050000
-      #include <QtWidgets>
-   #endif
+#include <QMainWindow>
+#include <QStatusBar>
+#include <QtGui>
+#if QT_VERSION >= 0x050000
+#include <QtWidgets>
+#endif
 
 //   #include <gsl/gsl_blas.h>
 //   #include <gsl/gsl_multifit_nlin.h>
 
-   QT_BEGIN_NAMESPACE
-      class QAction;
-      class QDialogButtonBox;
-      class QGroupBox;
-      class QLabel;
-      class QLineEdit;
-      class QMenu;
-      class QMenuBar;
-      class QPushButton;
-      class QTextEdit;
-      class QSpinBox;
-      class QStatusBar;
-      class QComboBox;
-      class QMessageBox;
-      class QIcon;
-      class QSize;
-      class QDialog;
-      class QCheckBox;
-      class QDoubleSpinBox;
-   QT_END_NAMESPACE
+QT_BEGIN_NAMESPACE
+class QAction;
+class QDialogButtonBox;
+class QGroupBox;
+class QLabel;
+class QLineEdit;
+class QMenu;
+class QMenuBar;
+class QPushButton;
+class QTextEdit;
+class QSpinBox;
+class QStatusBar;
+class QComboBox;
+class QMessageBox;
+class QIcon;
+class QSize;
+class QDialog;
+class QCheckBox;
+class QDoubleSpinBox;
+QT_END_NAMESPACE
 
-   class newwindow;
+class newwindow;
 
-   class MainWindow : public QMainWindow {
-      Q_OBJECT
-      
-      private:
-         std::vector < source > Sources;
-//         int Number_of_Sources;
-         int Number_of_Sources_used;
-         std::vector < int > Selected_Source;
-//int Selected_source;
-//to be included         std::vector < int > Selected_Source;
-         int Selected_Function;
-         std::vector < std::vector < double > > Experimental_Data;
-//         int Number_of_Exp_Points;
-         bool Plot_Window_Open;
-         bool Repeat_Fit;
+class MainWindow : public QMainWindow {
+  Q_OBJECT
 
-      public:
-         int Number_of_Fits;
-//         int Number_of_Functions;
-         std::vector < fit_function > FFunctions;
-         MainWindow();
-         int * Fit_Order;
-         double conf_band(int, int , double);
-//         int Number_of_Plot_Points;
-//         int Number_of_Fit_Points;
-         std::vector < std::vector < double > > Data_to_fit;
+private:
+  std::vector<source> Sources;
+  //         int Number_of_Sources;
+  unsigned int Number_of_Sources_used;
+  std::vector<int> Selected_Source;
+  // int Selected_source;
+  // to be included         std::vector < int > Selected_Source;
+  int Selected_Function;
+  std::vector<std::vector<double>> Experimental_Data;
+  //         int Number_of_Exp_Points;
+  bool Plot_Window_Open;
+  bool Repeat_Fit;
 
-      private slots:
-         void open();
-         void fit_func();
-         void func_choice();
-         void source_number();
-         void source_choice();
-         void plot();
-         void calc_eff();
-         void calc_exp_eff();
-         void fit_repeat();
-      protected:
-         void closeEvent(QCloseEvent *event);
+public:
+  int Number_of_Fits;
+  //         int Number_of_Functions;
+  std::vector<fit_function> FFunctions;
+  MainWindow();
+  int *Fit_Order;
+  double conf_band(int, int, double);
+  //         int Number_of_Plot_Points;
+  //         int Number_of_Fit_Points;
+  std::vector<std::vector<double>> Data_to_fit;
 
-      private:
-         void error_code(int);
-         void setStatusBar();
-         void createMenu();
-         void createHorizontalGroupBox();
-         void createGridGroupBox();
-         void createFormGroupBox();
-         void readSettings();
-         void writeSettings();
-         void loadFile(const QString &fileName);
-         void createStatusBar();
+private slots:
+  void open();
+  void fit_func();
+  void func_choice();
+  void source_number();
+  void source_choice();
+  void plot();
+  void calc_eff();
+  void calc_exp_eff();
+  void fit_repeat();
 
+protected:
+  void closeEvent(QCloseEvent *event);
 
-      enum { NumGridRows = 3, NumButtons = 4 };
+private:
+  void error_code(int);
+  void setStatusBar();
+  void createMenu();
+  void createHorizontalGroupBox();
+  void createGridGroupBox();
+  void createFormGroupBox();
+  void readSettings();
+  void writeSettings();
+  void loadFile(const QString &fileName);
+  void createStatusBar();
 
-      std::vector < QString > source_input_text;
-      QLabel *Number_of_Sources_label, *Calculate_for_gamma_label;
-      QSpinBox *Number_of_Sources_input;
-      QDoubleSpinBox *Gamma_input;
-      std::vector < QLabel* > source_input_label, Calculate_Efficiency_label, Calculate_Efficiency_result, Calculate_Efficiency_error, Calculate_Efficiency_error_label;
-      std::vector < QComboBox* > source_input;
-      std::vector < QDoubleSpinBox* > source_input_activity, source_input_activity_error, source_input_time;
-      QLabel *Function_Select_label, *Function_Name_label;
-      QComboBox *Function_Select_box;
-      QIcon *Function_Icon;
-      QPushButton *Data_input_button, *Calculate_Efficiencies_button, *Fit_button, *Repeat_Fit_button, *Plot_button, *Calculate_button;
-      QTextEdit *Editor_window;
-      std::vector < QCheckBox* > Plot_Fit_select, Plot_Confidence_select;
-      
-      
-      QString gen_text[6];
-      QGroupBox *horizontalGroupBox;
-      QGroupBox *gridGroupBox;
-      QLabel *text_eff[5],*text_conf[5],*text_error[5];
-      QLabel *gen_label[100];
-      QLabel *label_egamma,*label_result[5];
-      QPushButton *butt, *draw_button, *eff_button;
+  enum { NumGridRows = 3, NumButtons = 4 };
 
-      QDialogButtonBox *buttonBox;
-      QDoubleSpinBox *spin_egamma;
-      QMenu *fileMenu;
-      QMessageBox *msgBox;
-      QDialog *plotWin;
-      newwindow *lila;
-      QCheckBox *check_fit[5];
-      QCheckBox *check_conf[5];
-   };
+  std::vector<QString> source_input_text;
+  QLabel *Number_of_Sources_label, *Calculate_for_gamma_label;
+  QSpinBox *Number_of_Sources_input;
+  QDoubleSpinBox *Gamma_input;
+  std::vector<QLabel *> source_input_label, Calculate_Efficiency_label,
+      Calculate_Efficiency_result, Calculate_Efficiency_error,
+      Calculate_Efficiency_error_label;
+  std::vector<QComboBox *> source_input;
+  std::vector<QDoubleSpinBox *> source_input_activity,
+      source_input_activity_error, source_input_time;
+  QLabel *Function_Select_label, *Function_Name_label;
+  QComboBox *Function_Select_box;
+  QIcon *Function_Icon;
+  QPushButton *Data_input_button, *Calculate_Efficiencies_button, *Fit_button,
+      *Repeat_Fit_button, *Plot_button, *Calculate_button;
+  QTextEdit *Editor_window;
+  std::vector<QCheckBox *> Plot_Fit_select, Plot_Confidence_select;
+
+  QString gen_text[6];
+  QGroupBox *horizontalGroupBox;
+  QGroupBox *gridGroupBox;
+  QLabel *text_eff[5], *text_conf[5], *text_error[5];
+  QLabel *gen_label[100];
+  QLabel *label_egamma, *label_result[5];
+  QPushButton *butt, *draw_button, *eff_button;
+
+  QDialogButtonBox *buttonBox;
+  QDoubleSpinBox *spin_egamma;
+  QMenu *fileMenu;
+  QMessageBox *msgBox;
+  QDialog *plotWin;
+  newwindow *lila;
+  QCheckBox *check_fit[5];
+  QCheckBox *check_conf[5];
+};
 
 #endif
