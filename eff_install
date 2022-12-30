@@ -13,7 +13,7 @@ fi
 
 $program -project "QT += widgets printsupport" "LIBS += -lgsl -lgslcblas -lm" "QMAKE_CFLAGS += -ffloat-store" "QMAKE_CXXFLAGS += -ffloat-store" "DEFINES += VERSION=1.4 CUSTOM" "INCLUDEPATH += include"
 $program
-make
+make -j4
 make clean
 
 exit 0
