@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(efficiency VERSION ${VERSION} LANGUAGES CXX)
+project(efficiency VERSION 1.5 LANGUAGES CXX)
 
 #set(VERSION ${CMAKE_PROJECT_VERSION})
 add_definitions(-DVERSION=${CMAKE_PROJECT_VERSION})
