@@ -44,50 +44,51 @@ QT_END_NAMESPACE
 class MainWindow;
 
 class newwindow : public QMainWindow {
-  Q_OBJECT
+   Q_OBJECT
 
 public:
-  explicit newwindow(class MainWindow *testkk);
-  void resizeEvent(QResizeEvent *event);
+   explicit newwindow(class MainWindow *testkk);
+   void resizeEvent(QResizeEvent *event);
 
 protected:
-  void closeEvent(QCloseEvent *event);
+   void closeEvent(QCloseEvent *event);
 
 private slots:
 
 private:
-  void file_error();
-  void setStatusBar();
-  void createMenu();
-  void createHorizontalGroupBox();
-  void createGridGroupBox();
-  void createFormGroupBox();
-  void writeSettings();
-  void readSettings();
-  void loadFile(const QString &fileName);
-  void setCurrentFile(const QString &fileName);
-  void createStatusBar();
+   void file_error();
+   void setStatusBar();
+   void createMenu();
+   void createHorizontalGroupBox();
+   void createGridGroupBox();
+   void createFormGroupBox();
+   void writeSettings();
+   void readSettings();
+   void loadFile(const QString &fileName);
+   void setCurrentFile(const QString &fileName);
+   void createStatusBar();
 
-  enum { NumGridRows = 3, NumButtons = 4 };
+   enum { NumGridRows = 3,
+          NumButtons = 4 };
 
-  QString curFile;
-  QMenuBar *menuBar;
-  QGroupBox *horizontalGroupBox;
-  QGroupBox *gridGroupBox;
-  QGroupBox *formGroupBox;
-  QTextEdit *smallEditor;
-  QTextEdit *bigEditor;
-  QLabel *labels[NumGridRows];
-  QLineEdit *lineEdits[NumGridRows];
-  QPushButton *butt, *open_button, *fit_button, *draw_button;
-  QDialogButtonBox *buttonBox;
-  QSpinBox *lala, *eff_spin;
-  QMenu *fileMenu;
-  QAction *exitAction;
-  QComboBox *func_combo;
-  QMessageBox *msgBox;
-  QIcon *func_icon;
-  QDialog *plotWin;
-  QColor *Colours[5];
+   QString curFile;
+   QMenuBar *menuBar;
+   QGroupBox *horizontalGroupBox;
+   QGroupBox *gridGroupBox;
+   QGroupBox *formGroupBox;
+   QTextEdit *smallEditor;
+   QTextEdit *bigEditor;
+   QLabel *labels[NumGridRows];
+   QLineEdit *lineEdits[NumGridRows];
+   QPushButton *butt, *open_button, *fit_button, *draw_button;
+   QDialogButtonBox *buttonBox;
+   QSpinBox *lala, *eff_spin;
+   QMenu *fileMenu;
+   QAction *exitAction;
+   QComboBox *func_combo;
+   QMessageBox *msgBox;
+   QIcon *func_icon;
+   QDialog *plotWin;
+   QColor *Colours[5];
 };
 #endif // NEWWINDOW_H
