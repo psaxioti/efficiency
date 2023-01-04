@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="Icons">
+    <file alias="Debertin.png">/home/axiotis/.clouds/gmail/Mega/Programming/efficiency/Resources/Icons/Debertin.png</file>
+    <file alias="IAEA.png">/home/axiotis/.clouds/gmail/Mega/Programming/efficiency/Resources/Icons/IAEA.png</file>
+    <file alias="Kalfas.png">/home/axiotis/.clouds/gmail/Mega/Programming/efficiency/Resources/Icons/Kalfas.png</file>
+  </qresource>
+</RCC>
+

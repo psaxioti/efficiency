@@ -52,9 +52,7 @@
 #include <QMainWindow>
 #include <QStatusBar>
 #include <QtGui>
-#if QT_VERSION >= 0x050000
 #include <QtWidgets>
-#endif
 
 //   #include <gsl/gsl_blas.h>
 //   #include <gsl/gsl_multifit_nlin.h>

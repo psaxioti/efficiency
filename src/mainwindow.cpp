@@ -132,8 +132,7 @@ MainWindow::MainWindow() {
    Function_Select_box->setMinimumHeight(45);
    Function_Select_box->setIconSize(QSize(250, 45));
    for (size_t i = 0; i < FFunctions.size(); i++) {
-      Function_Icon = new QIcon();
-      Function_Icon->addFile(QString::fromStdString(FFunctions[i].Function_Picture));
+      Function_Icon = new QIcon(QString::fromStdString(FFunctions[i].Function_Picture));
       Function_Select_box->addItem("");
       Function_Select_box->setItemIcon(i, *Function_Icon);
    }
@@ -300,8 +299,6 @@ void MainWindow::loadFile(const QString &fileName) {
    file.close();
 #ifndef QT_NO_CURSOR
    QApplication::setOverrideCursor(Qt::WaitCursor);
-#endif
-#ifndef QT_NO_CURSOR
    QApplication::restoreOverrideCursor();
 #endif
    statusBar()->showMessage(tr("File loaded"), 6000);

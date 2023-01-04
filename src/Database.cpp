@@ -100,35 +100,25 @@ int fit_function::fdf1(const gsl_vector *x, void *params, gsl_vector *f, gsl_mat
 
 std::vector<source> create_sources() {
    double Lifetime = 0., Lifetime_error = 0.;
-   std::string Source_Name;
+   QString Source_Name;
    std::vector<source> test;
    std::vector<double> energies, energies_err, Intensity, Intensity_err;
 
-   std::string line, datapath, filename;
-   std::ifstream sources;
-#if defined(_WIN32) || defined(CUSTOM) || defined(__APPLE__)
-   datapath = QApplication::applicationDirPath().toStdString().c_str();
-   datapath.append("/Data/");
-#elif defined(__linux__)
-   datapath = "/usr/local/share/Efficiency/";
-#endif
+   QString datapath, filename;
+   datapath = ":sources/";
    filename = datapath + "Sources_DB.lib";
 
-   sources.open(filename.c_str());
-   if (!sources.is_open()) {
-      QString fileName = QFileDialog::getOpenFileName(0, "Open file with sources");
-      sources.open(fileName.toUtf8().constData());
-      if (!sources.is_open())
-         return test;
-   }
+   QFile file(filename);
+   while (!file.open(QFile::ReadOnly | QFile::Text))
+      file.setFileName(QFileDialog::getOpenFileName(0, "Open file with sources"));
 
-   while (!sources.eof()) {
-      char c = sources.peek();
+   while (!file.atEnd()) {
+      QByteArray line = file.readLine();
+      char c = line[0];
       double ig, ig_err;
       if (c == '#' || c == '\n' || c == EOF) {
-         sources.ignore(512, '\n');
          if (energies.size() > 0.) {
-            source test1(Source_Name, Lifetime, Lifetime_error, energies, energies_err, Intensity, Intensity_err);
+            source test1(Source_Name.toStdString(), Lifetime, Lifetime_error, energies, energies_err, Intensity, Intensity_err);
             test.push_back(test1);
             Lifetime = 0.;
             energies.clear();
@@ -138,8 +128,7 @@ std::vector<source> create_sources() {
          }
          continue;
       }
-      getline(sources, line);
-      std::istringstream iss(line);
+      QTextStream iss(&line, QIODevice::ReadOnly);
       if (Lifetime == 0.)
          iss >> Source_Name >> Lifetime >> Lifetime_error;
       else {
@@ -152,7 +141,7 @@ std::vector<source> create_sources() {
       }
    }
 
-   sources.close();
+   file.close();
    return test;
 }
 
@@ -160,13 +149,7 @@ std::vector<fit_function> create_functions() {
    std::vector<fit_function> test;
    std::string name, picture, datapath;
    int no_parameters;
-#if defined(_WIN32) || defined(CUSTOM) || defined(__APPLE__)
-   datapath = QApplication::applicationDirPath().toStdString().c_str();
-   datapath.append("/Data/");
-#elif defined(__linux__)
-   datapath = "/usr/local/share/Efficiency/";
-#endif
-   datapath.append("Icons/");
+   datapath = ":Icons/";
 
    {
       name = "Debertin";

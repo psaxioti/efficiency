@@ -63,7 +63,7 @@ newwindow::newwindow(MainWindow *testing) {
          pen.setColor(Colours[ijk + 1]);
          customPlot->graph(Number_of_Plots)->setName(QString::fromStdString(testing->FFunctions[testing->Fit_Order[ijk]].Function_Name));
          customPlot->graph(Number_of_Plots)->setPen(pen);
-#if defined(_WIN32)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
          customPlot->graph(Number_of_Plots)->setData(QVector<double>::fromStdVector(testing->FFunctions[testing->Fit_Order[ijk]].X_for_Plot), QVector<double>::fromStdVector(testing->FFunctions[testing->Fit_Order[ijk]].Y_for_Plot));
 #else
          customPlot->graph(Number_of_Plots)->setData(QVector<double>((testing->FFunctions[testing->Fit_Order[ijk]].X_for_Plot).begin(), (testing->FFunctions[testing->Fit_Order[ijk]].X_for_Plot).end()), QVector<double>((testing->FFunctions[testing->Fit_Order[ijk]].Y_for_Plot).begin(), (testing->FFunctions[testing->Fit_Order[ijk]].Y_for_Plot).end()));
@@ -81,7 +81,7 @@ newwindow::newwindow(MainWindow *testing) {
             pen.setColor(Colours[ijk + 1]);
             customPlot->addGraph();
             customPlot->graph(Number_of_Plots)->setPen(pen);
-#if defined(_WIN32)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             customPlot->graph(Number_of_Plots)->setData(QVector<double>::fromStdVector(testing->FFunctions[testing->Fit_Order[ijk]].X_for_Plot), QVector<double>::fromStdVector(testing->FFunctions[testing->Fit_Order[ijk]].Y_for_Plot));
 #else
             customPlot->graph(Number_of_Plots)->setData(QVector<double>((testing->FFunctions[testing->Fit_Order[ijk]].X_for_Plot).begin(), (testing->FFunctions[testing->Fit_Order[ijk]].X_for_Plot).end()), QVector<double>(cb.begin(), cb.end()));
