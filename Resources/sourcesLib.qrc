@@ -1,6 +1,6 @@
 <RCC>
   <qresource prefix="sources">
-    <file alias="Sources_DB.lib">./Resources/Sources_DB.lib</file>
+    <file alias="Sources_DB.lib">./Sources_DB.lib</file>
   </qresource>
 </RCC>
 

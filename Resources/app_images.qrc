@@ -1,8 +1,8 @@
 <RCC>
   <qresource prefix="Icons">
-    <file alias="Debertin.png">./Resources/Icons/Debertin.png</file>
-    <file alias="IAEA.png">./Resources/Icons/IAEA.png</file>
-    <file alias="Kalfas.png">./Resources/Icons/Kalfas.png</file>
+    <file alias="Debertin.png">./Icons/Debertin.png</file>
+    <file alias="IAEA.png">./Icons/IAEA.png</file>
+    <file alias="Kalfas.png">./Icons/Kalfas.png</file>
   </qresource>
 </RCC>
 
