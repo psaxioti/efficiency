@@ -8,7 +8,7 @@ It is important that the file Sources_DB.lib is in the same directory from where
       gammas intensities
       gammas intensities errors
 
-In the folder there is a file named "puls.dat" for test reasons.
+In the folder there is a file named "Eu152_sample.dat" for test reasons.
 
-Run the programm, choose the source measured, press "open data file" and give the file with the data (for example puls.dat), set Activity, Activity error and measurement time and press "calculate efficiencies".
+Run the programm, choose the source measured, press "open data file" and give the file with the data (for example Eu152_sample.dat), set Activity, Activity error and measurement time and press "calculate efficiencies".
 Following select the function to fit and press "fit".

@@ -23,16 +23,11 @@ newwindow::newwindow(MainWindow *testing) {
    customPlot->xAxis->setBasePen(QPen(Qt::black, 2));
    customPlot->graph(Number_of_Plots)->setLineStyle(QCPGraph::lsNone);
    customPlot->graph(Number_of_Plots)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 6));
-   auto yerrors = new QCPErrorBars(customPlot->xAxis, customPlot->yAxis);
-   yerrors->setDataPlottable(customPlot->graph(Number_of_Plots));
-   yerrors->setErrorType(QCPErrorBars::ErrorType::etValueError);
-   yerrors->setPen(QPen(QColor(180, 180, 180)));
    //   customPlot->graph(Number_of_Plots)->setErrorType(QCPGraph::etValue);
    //   customPlot->graph(Number_of_Plots)->setErrorPen(QPen(QColor(180,180,180)));
    customPlot->graph(Number_of_Plots)->setName("Experimental");
    //   customPlot->graph(Number_of_Plots)->setDataValueError(x, y, yerr);
    customPlot->graph(Number_of_Plots)->setData(x, y);
-   yerrors->setData(yerr);
    Number_of_Plots++;
    // give the axes some labels:
    customPlot->xAxis->setLabel("Energy" + QString::fromUtf8("γ") + "(keV)");
@@ -50,6 +45,12 @@ newwindow::newwindow(MainWindow *testing) {
            &(testing->FFunctions[testing->Fit_Order[0]].Y_for_Plot[0]),
            &(testing->FFunctions[testing->Fit_Order[0]].Y_for_Plot[(testing->FFunctions[testing->Fit_Order[0]].X_for_Plot.size()) - 1]))) *
            1.2);
+   auto yerrors = new QCPErrorBars(customPlot->xAxis, customPlot->yAxis);
+   yerrors->setDataPlottable(customPlot->graph(Number_of_Plots - 1));
+   yerrors->setErrorType(QCPErrorBars::ErrorType::etValueError);
+   yerrors->setPen(QPen(QColor(180, 180, 180)));
+   yerrors->setData(yerr);
+   yerrors->removeFromLegend();
    // End of plot for the experimental Data graph(0)
    customPlot->legend->setVisible(true);
    customPlot->legend->setFont(QFont("Helvetica", 9));
