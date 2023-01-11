@@ -1,0 +1,11 @@
+Source: efficiency
+Section: Productivity/Scientific/Physics
+Priority: optional
+Maintainer: Axiotis Michail
+Build-Depends: debhelper (>= 9), cmake (>= 3.16), libgsl-dev
+
+Package: efficiency
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Efficiency program made at Demokritos lab
+ This package contains the efficiency program that calculates the efficiency of an HPGe detector

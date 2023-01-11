@@ -1,0 +1,127 @@
+#!/usr/bin/make -f
+# Sample debian/rules that uses debhelper.
+# GNU copyright 1997 to 1999 by Joey Hess.
+
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+CFLAGS = -g
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+CFLAGS += -O0
+else
+CFLAGS += -O2
+endif
+
+name = $(shell dpkg-parsechangelog | sed -n -e 's/^Source: //p')
+version = $(shell dpkg-parsechangelog | sed -n -e 's/^Version: //p')
+buildroot = /usr/src/packages/BUILD/debian/$(name)
+sources_path = /usr/src/packages/SOURCES
+
+build-arch:
+	dh_testdir
+
+	# Add here commands to compile the package.
+	mkdir build ; cd build ; cmake -DCMAKE_INSTALL_PREFIX=/usr ../ ; make -j4
+	# --- end custom part for compiling
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+
+	# Add here commands to clean up after the build process.
+	#make clean || true
+	# --- end custom part for cleaning up
+
+	dh_clean
+
+install-indep: 
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+
+	# Add here commands to install the package
+	# The DESTDIR Has To Be Exactly
+	dpkg-parsechangelog
+	# --- end custom part for installing
+
+install-arch: build-arch
+	dh_testdir
+	dh_testroot
+	#dh_clean -k
+	dh_prep
+	dh_installdirs
+
+	# Add here commands to install the package
+	# The DESTDIR Has To Be Exactly  /usr/src/packages/BUILD/debian/<nameOfPackage>
+	cd build ; make install DESTDIR=$(buildroot)
+	# --- end custom part for installing
+
+# Build architecture-independent files here.
+binary-indep: install-indep
+	dh_testdir
+	dh_testroot
+	dh_installdebconf
+	dh_installdocs
+	dh_installexamples
+	dh_installmenu
+	dh_installlogrotate
+	dh_installemacsen
+	dh_installpam
+	dh_installmime
+	dh_installinit
+	dh_installcron
+	dh_installman
+	dh_installinfo
+#	dh_undocumented
+	dh_installchangelogs
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_makeshlibs
+	dh_installdeb
+	dh_perl
+#	dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb -i
+	# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build-arch install-arch
+	dh_testdir
+	dh_testroot
+	dh_installdebconf
+	dh_installdocs
+	dh_installexamples
+	dh_installmenu
+	dh_installlogrotate
+	dh_installemacsen
+	dh_installpam
+	dh_installmime
+	dh_installinit
+	dh_installcron
+	dh_installman
+	dh_installinfo
+#	dh_undocumented
+	dh_installchangelogs
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_makeshlibs
+	dh_installdeb
+	dh_perl
+#	dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb -a
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install
